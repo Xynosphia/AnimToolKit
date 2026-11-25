@@ -1,3 +1,4 @@
+import math
 import os
 import sys
 import builtins
@@ -23,7 +24,7 @@ else:
 
 
 # Import project utilities and data from utilities.py
-from utilities import get_selected_cam, ui_file, get_scene_cam, get_scene_geo, get_memory, get_distance_to_active_camera
+from utilities import get_selected_cam, get_selected_geo, ui_file, get_scene_cam, get_scene_geo, get_memory, get_distance_to_active_camera
 
 
 # Maya version and Qt imports
@@ -97,18 +98,22 @@ class AnimToolKit():
 
         # Connect buttons to class method and imported function from utilities.py
 
-        # comboboxes
+        # Selection comboboxes
         cam_list = get_scene_cam()
         sub_list = get_scene_geo()
         self.ui.Camera_List.addItems(cam_list)
         self.ui.Subject_List.addItems(sub_list)
+
+        # Focus Box
+        self.ui.camfocus_button.clicked.connect(self.focus_on_selected_subject)
+
 
 
         #viewport 
         # https://blog.lidia-martinez.com/embed-maya-native-ui-objects-in-pyside2-maya-2017
 
         #HELP ME!!!!!!
-        cam_name = self.ui.Camera_List.currentText()
+        cam_name = self.ui.Camera_List.currentData()
         if cam_name:
             current_cam = cam_name
         else:
@@ -127,10 +132,34 @@ class AnimToolKit():
         self.ui.Viewport_Window.layout().addWidget(self.viewport_widget)
 
         # memoryPressur_bar
-        self.ui
-
+        memoryData = get_memory()
+        max_memory = memoryData[1]
+        current_memory = memoryData[0]
+        self.ui.memory_bar.setValue(current_memory)
+        self.ui.memory_bar.setMaximum(max_memory)
 
     # Class methods
+    def focus_on_selected_subject(self):
+        # Get selected object
+        sel_subj = self.Subject_List.currentData() 
+        if subj = sel_subj:
+            continue
+        else:
+            subj = get_selected_geo()
+
+        #Get selected camera
+        sel_cam = self.Camera_List.currentData()
+
+        # get world space position of the selected subject and camera
+        subj_pos = cmds.xform(sel_subj, query=True, worldSpace=True, rotatePivot=True)
+        cam_pos = cmds.xform(sel_cam, query=True, worldSpace=True, rotatePivot=True)
+
+        # adjust camera focal distance to the selected subject
+        distance = math.dist(cam_pos, subj_pos)
+        focus = cmds.camera(sel_cam, depthOfField=True, focusDistance=distance)
+        return focus
+
+         
 
 
     

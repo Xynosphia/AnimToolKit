@@ -48,7 +48,9 @@ def get_memory():
     totalMemory = cmds.memory(physicalMemory=True, gigaByte=True)
     freeMemory = cmds.memory(freeMemory=True, gigaByte=True)
     usedMemory = totalMemory - freeMemory
-    return usedMemory, totalMemory, freeMemory
+    return usedMemory, totalMemory, freeMemory 
+    #can i use it less frequently to reduce performance impact? maybe every 10 mins or when a button is pressed?
+
 
 def get_distance_to_active_camera():
     # for getting subject
