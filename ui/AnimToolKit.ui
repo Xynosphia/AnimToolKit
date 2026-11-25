@@ -108,7 +108,7 @@
            <item>
             <widget class="QPushButton" name="camfocus_button">
              <property name="text">
-              <string>Manual Select</string>
+              <string>Focus</string>
              </property>
             </widget>
            </item>
@@ -436,7 +436,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QProgressBar" name="progressBar">
+       <widget class="QProgressBar" name="memory_bar">
         <property name="value">
          <number>24</number>
         </property>
